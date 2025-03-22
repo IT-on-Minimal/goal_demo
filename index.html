@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GOAL Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <h1 class="game-title">GOAL</h1>
+      <div class="field-selector">
+        <button data-size="small" class="active">Маленькое</button>
+        <button data-size="medium">Среднее</button>
+        <button data-size="large">Большое</button>
+      </div>
+      <div class="coefficient">Коэффициент: <span id="coef">1.45x</span></div>
+      <div class="game-grid" id="gameGrid"></div>
+      <div class="status" id="status"></div>
+      <button class="start-button" id="startBtn">
+        <span class="icon">▶</span>
+        <span class="text">СТАВКА</span>
+      </button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

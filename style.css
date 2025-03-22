@@ -1,0 +1,164 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #272749;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 8px;
+}
+
+.game-container {
+  background: linear-gradient(
+    to bottom,
+    #346625 0%,
+    #4a8d28 10%,
+    #68bd08 50%,
+    #4a8d28 90%,
+    #346625 100%
+  );
+
+  border: 2px solid orange;
+  border-radius: 12px;
+  padding: 16px;
+  max-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.game-title {
+  font-size: 24px;
+  margin: 0;
+  text-align: center;
+}
+
+.field-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.field-selector button {
+  background-color: #0f0f0f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.field-selector button.active {
+  background-color: #24b101;
+  font-weight: bold;
+}
+
+.coefficient {
+  font-size: 14px;
+  background-color: #2b2f56;
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+
+.game-grid {
+  width: 240px;
+  height: 420px;
+  display: grid;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  background-image: url("ball.svg"), url("gate.svg");
+  background-repeat: no-repeat, no-repeat;
+  background-position: top center, bottom center;
+  background-size: 48px auto, 85px auto;
+}
+
+.cell {
+  background-color: #a4d07f;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  user-select: none;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.cell.square {
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.cell.active-row {
+  background-color: #f2f2f2 !important;
+}
+
+.cell.bomb::after {
+  content: "💣";
+  font-size: 25px;
+}
+
+.cell.ball::after {
+  content: "⚽";
+  font-size: 25px;
+}
+
+.cell.boom::after {
+  content: "💥";
+  font-size: 25px;
+}
+
+.grid-lost .cell {
+  background-color: #aa5252 !important;
+}
+
+.status {
+  font-size: 14px;
+  min-height: 18px;
+  text-align: center;
+}
+
+.start-button {
+  position: relative;
+  background: linear-gradient(to bottom, #347b00, #5ca003 70%);
+  border: 2px solid black;
+  padding: 10px 20px;
+  padding-left: 28px;
+  font-size: 16px;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 4px 0 #1a4600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+}
+
+.start-button:active {
+  transform: scale(0.95) translateY(2px);
+  box-shadow: 0 2px 0 #1a4600;
+}
+
+.start-button .icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.start-button .text {
+  font-weight: bold;
+}
