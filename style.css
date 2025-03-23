@@ -109,7 +109,7 @@ body {
 
 .cell.ball::after {
   content: "⚽";
-  font-size: 25px;
+  font-size: 46px;
 }
 
 .cell.boom::after {
