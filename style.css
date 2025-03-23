@@ -11,6 +11,7 @@ body {
 }
 
 .game-container {
+  position: relative;
   background: linear-gradient(
     to bottom,
     #346625 0%,
@@ -19,7 +20,6 @@ body {
     #4a8d28 90%,
     #346625 100%
   );
-
   border: 2px solid orange;
   border-radius: 12px;
   padding: 16px;
@@ -30,12 +30,42 @@ body {
   align-items: center;
   gap: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.game-container::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: url("ball.svg") no-repeat center top;
+  background-size: 100% auto;
+  transform: rotate(180deg); /* ПОВОРОТ */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.game-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: url("gate.svg") no-repeat center bottom;
+  background-size: 100% auto;
+  transform: rotate(180deg); /* ПОВОРОТ */
+  z-index: 0;
+  pointer-events: none;
 }
 
 .game-title {
   font-size: 24px;
   margin: 0;
   text-align: center;
+  z-index: 1;
 }
 
 .field-selector {
@@ -43,6 +73,7 @@ body {
   gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
+  z-index: 1;
 }
 
 .field-selector button {
@@ -65,6 +96,7 @@ body {
   background-color: #2b2f56;
   padding: 4px 12px;
   border-radius: 10px;
+  z-index: 1;
 }
 
 .game-grid {
@@ -74,10 +106,7 @@ body {
   gap: 4px;
   justify-content: center;
   align-items: center;
-  background-image: url("ball.svg"), url("gate.svg");
-  background-repeat: no-repeat, no-repeat;
-  background-position: top center, bottom center;
-  background-size: 48px auto, 85px auto;
+  z-index: 1;
 }
 
 .cell {
@@ -125,6 +154,7 @@ body {
   font-size: 14px;
   min-height: 18px;
   text-align: center;
+  z-index: 1;
 }
 
 .start-button {
@@ -143,6 +173,7 @@ body {
   align-items: center;
   justify-content: center;
   min-width: 200px;
+  z-index: 1;
 }
 
 .start-button:active {

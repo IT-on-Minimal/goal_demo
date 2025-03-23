@@ -6,9 +6,9 @@ const startBtn = document.getElementById("startBtn");
 
 let cols = 3;
 let rows = 4;
-let currentStep = 0;
-let isGameOver = false;
 let field = [];
+let currentStep = 0;
+let maxSteps = 0;
 
 const coefficientsMap = {
   small: ["1.45x", "1.88x", "2.46x", "3.29x"],
@@ -52,7 +52,6 @@ function setupSizeButtons() {
 }
 
 function generateField() {
-  isGameOver = false;
   currentStep = 0;
   grid.classList.remove("grid-lost");
   grid.innerHTML = "";
@@ -86,74 +85,73 @@ function generateField() {
   }
 }
 
-function activateFirstRow() {
+function getRandomMaxSteps(size) {
+  const rand = Math.random() * 100;
+  if (size === "small") {
+    return rand < 65 ? getRandomBetween(1, 2) : getRandomBetween(3, 4);
+  } else if (size === "medium") {
+    if (rand < 60) return getRandomBetween(1, 3);
+    if (rand < 80) return getRandomBetween(4, 5);
+    if (rand < 90) return 6;
+    return 7;
+  } else if (size === "large") {
+    if (rand < 50) return getRandomBetween(1, 3);
+    if (rand < 80) return getRandomBetween(4, 5);
+    if (rand < 100) return getRandomBetween(6, 7);
+    return getRandomBetween(8, 10);
+  }
+  return 3;
+}
+
+function getRandomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function autoPlay() {
   const activeSize = document.querySelector(".field-selector .active").dataset
     .size;
   coefEl.textContent = coefficientsMap[activeSize][0];
+  maxSteps = getRandomMaxSteps(activeSize);
+  currentStep = 0;
 
-  for (let i = 0; i < cols; i++) {
-    const cell = field[0][i].element;
-    cell.classList.add("active-row");
-    cell.addEventListener("click", handleClick);
-  }
-}
+  function playNextStep() {
+    if (currentStep >= maxSteps || currentStep >= rows) return;
 
-function handleClick(e) {
-  if (isGameOver) return;
-
-  const cell = e.target;
-  const row = parseInt(cell.dataset.row);
-  const col = parseInt(cell.dataset.col);
-  const cellData = field[row][col];
-  if (row !== currentStep) return;
-
-  if (cellData.type === "bomb") {
-    cell.classList.add("boom");
-    grid.classList.add("grid-lost");
-    showAllBombs();
-    isGameOver = true;
-    return;
-  }
-
-  cell.classList.add("ball");
-  for (let i = 0; i < cols; i++) {
-    if (field[row][i].type === "bomb") {
-      field[row][i].element.classList.add("bomb");
-    }
-  }
-
-  currentStep++;
-  const activeSize = document.querySelector(".field-selector .active").dataset
-    .size;
-
-  if (currentStep >= rows) {
-    isGameOver = true;
-    return;
-  }
-
-  coefEl.textContent = coefficientsMap[activeSize][currentStep];
-
-  for (let i = 0; i < cols; i++) {
-    const nextCell = field[currentStep][i].element;
-    nextCell.classList.add("active-row");
-    nextCell.addEventListener("click", handleClick);
-  }
-}
-
-function showAllBombs() {
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const cellData = field[row][col];
-      if (cellData.type === "bomb") {
-        cellData.element.classList.add("bomb");
+    // Очистка прошлых active-row
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        field[r][c].element.classList.remove("active-row");
       }
     }
+
+    // Выбираем один случайный столбец для текущей строки
+    const ballCol = Math.floor(Math.random() * cols);
+
+    for (let i = 0; i < cols; i++) {
+      const cell = field[currentStep][i];
+      if (i === ballCol) {
+        cell.element.classList.add("ball");
+      }
+      // Подсветка только текущего ряда
+      cell.element.classList.add("active-row");
+    }
+
+    coefEl.textContent =
+      coefficientsMap[activeSize][currentStep] ||
+      coefficientsMap[activeSize].at(-1);
+
+    currentStep++;
+    if (currentStep < maxSteps && currentStep < rows) {
+      setTimeout(playNextStep, 1500);
+    }
   }
+
+  playNextStep();
 }
 
 startBtn.addEventListener("click", () => {
   generateField();
-  activateFirstRow();
+  autoPlay();
 });
 
 setupSizeButtons();
