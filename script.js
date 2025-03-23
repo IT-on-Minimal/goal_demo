@@ -9,6 +9,7 @@ let rows = 4;
 let field = [];
 let currentStep = 0;
 let maxSteps = 0;
+let autoplayTimeout = null;
 
 const coefficientsMap = {
   small: ["1.45x", "1.88x", "2.46x", "3.29x"],
@@ -25,6 +26,12 @@ const coefficientsMap = {
     "5.45x",
     "6.67x",
   ],
+};
+
+const ballSizeMap = {
+  small: "46px",
+  medium: "32px",
+  large: "24px",
 };
 
 function setupSizeButtons() {
@@ -45,7 +52,14 @@ function setupSizeButtons() {
         rows = 10;
       }
 
+      // Изменяем размер эмоджи ⚽
+      document.documentElement.style.setProperty(
+        "--ball-emoji-size",
+        ballSizeMap[size]
+      );
+
       coefEl.textContent = coefficientsMap[size][0];
+      clearTimeout(autoplayTimeout); // Остановить автоплей при смене поля
       generateField();
     });
   });
@@ -71,7 +85,6 @@ function generateField() {
       const cell = document.createElement("div");
       cell.classList.add("cell");
       if (activeSize === "medium") cell.classList.add("square");
-
       cell.dataset.row = row;
       cell.dataset.col = col;
 
@@ -87,19 +100,20 @@ function generateField() {
 
 function getRandomMaxSteps(size) {
   const rand = Math.random() * 100;
-  if (size === "small") {
+  if (size === "small")
     return rand < 65 ? getRandomBetween(1, 2) : getRandomBetween(3, 4);
-  } else if (size === "medium") {
-    if (rand < 60) return getRandomBetween(1, 3);
-    if (rand < 80) return getRandomBetween(4, 5);
-    if (rand < 90) return 6;
-    return 7;
-  } else if (size === "large") {
-    if (rand < 50) return getRandomBetween(1, 3);
-    if (rand < 80) return getRandomBetween(4, 5);
-    if (rand < 100) return getRandomBetween(6, 7);
-    return getRandomBetween(8, 10);
-  }
+  if (size === "medium")
+    return rand < 60
+      ? getRandomBetween(1, 3)
+      : rand < 80
+      ? getRandomBetween(4, 5)
+      : 6;
+  if (size === "large")
+    return rand < 50
+      ? getRandomBetween(1, 3)
+      : rand < 80
+      ? getRandomBetween(4, 5)
+      : getRandomBetween(6, 7);
   return 3;
 }
 
@@ -108,41 +122,33 @@ function getRandomBetween(min, max) {
 }
 
 function autoPlay() {
-  const activeSize = document.querySelector(".field-selector .active").dataset
-    .size;
-  coefEl.textContent = coefficientsMap[activeSize][0];
-  maxSteps = getRandomMaxSteps(activeSize);
+  const size = document.querySelector(".field-selector .active").dataset.size;
+  coefEl.textContent = coefficientsMap[size][0];
+  maxSteps = getRandomMaxSteps(size);
   currentStep = 0;
 
   function playNextStep() {
     if (currentStep >= maxSteps || currentStep >= rows) return;
 
-    // Очистка прошлых active-row
     for (let r = 0; r < rows; r++) {
       for (let c = 0; c < cols; c++) {
-        field[r][c].element.classList.remove("active-row");
+        field[r][c].element.classList.remove("active-row", "ball");
       }
     }
 
-    // Выбираем один случайный столбец для текущей строки
     const ballCol = Math.floor(Math.random() * cols);
-
-    for (let i = 0; i < cols; i++) {
-      const cell = field[currentStep][i];
-      if (i === ballCol) {
-        cell.element.classList.add("ball");
-      }
-      // Подсветка только текущего ряда
+    for (let c = 0; c < cols; c++) {
+      const cell = field[currentStep][c];
+      if (c === ballCol) cell.element.classList.add("ball");
       cell.element.classList.add("active-row");
     }
 
     coefEl.textContent =
-      coefficientsMap[activeSize][currentStep] ||
-      coefficientsMap[activeSize].at(-1);
-
+      coefficientsMap[size][currentStep] || coefficientsMap[size].at(-1);
     currentStep++;
+
     if (currentStep < maxSteps && currentStep < rows) {
-      setTimeout(playNextStep, 1500);
+      autoplayTimeout = setTimeout(playNextStep, 1500);
     }
   }
 
@@ -150,6 +156,7 @@ function autoPlay() {
 }
 
 startBtn.addEventListener("click", () => {
+  clearTimeout(autoplayTimeout);
   generateField();
   autoPlay();
 });
