@@ -3,30 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GOAL Game</title>
+    <title>GOAL</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="game-container">
-      <div class="svg-top"></div>
-
-      <h1 class="game-title">GOAL</h1>
-      <div class="field-selector">
-        <button data-size="small" class="active">Маленькое</button>
-        <button data-size="medium">Среднее</button>
-        <button data-size="large">Большое</button>
+    <div class="game-wrapper">
+      <div class="game-title">GOAL</div>
+      <div class="game-container">
+        <div class="coefficient" id="coef">Коэффициент: 1.21x</div>
+        <div class="game-grid" id="gameGrid"></div>
+        <div class="buttons">
+          <button class="btn" id="startBtn">
+            <span class="icon">▶</span> Получить сигнал
+          </button>
+          <button class="btn" id="resetBtn">Сигнал</button>
+          <button class="btn" id="playBtn">Играть</button>
+        </div>
       </div>
-      <div class="coefficient">Коэффициент: <span id="coef">1.45x</span></div>
-      <div class="game-grid" id="gameGrid"></div>
-      <div class="status" id="status"></div>
-      <button class="start-button" id="startBtn">
-        <span class="icon">▶</span>
-        <span class="text">СТАВКА</span>
-      </button>
-
-      <div class="svg-bottom"></div>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>
